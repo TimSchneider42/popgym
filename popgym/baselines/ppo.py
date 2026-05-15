@@ -37,6 +37,7 @@ def main():
     num_splits = int(os.environ.get("POPGYM_NUM_SPLITS", 1))
     split_id = int(os.environ.get("POPGYM_SPLIT_ID", 0))
     project_id = os.environ.get("POPGYM_PROJECT", "popgym-debug")
+    wandb_entity = os.environ.get("POPGYM_WANDB_ENTITY", "prorok-lab")
     gpu_per_worker = float(os.environ.get("POPGYM_GPU", 0.25))
     max_steps = int(os.environ.get("POPGYM_STEPS", 15e6))
     storage_path = os.environ.get("POPGYM_STORAGE", "/tmp/ray_results")
@@ -178,11 +179,11 @@ def main():
 
     # Write your own wandb entity here
     if project_id:
-        from ray.air.callbacks.wandb import WandbLoggerCallback
+        from popgym.baselines.custom_logger import WandbLoggerCallback
 
         logging_callbacks = [
             WandbLoggerCallback(
-                project=project_id, entity="prorok-lab", log_config=True
+                project=project_id, entity=wandb_entity, log_config=True
             )
         ]
     else:
